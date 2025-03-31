@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plot Function</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+</head>
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        color: red;
+    }
+</style>
+<body>
+    <h1>Happy Birthday Dear Jr! 🎉</h1>
+    <p>Dear Jr, on this special day, I wish you all the happiness in the world. May your year be filled with joy, success, and endless smiles! 🎂🥳</p>
+
+    <label for="kSlider">Adjust Kanishk value:</label>
+    <input type="range" id="kSlider" min="0.1" max="100" step="0.1" value="1" oninput="updatePlot()">
+    <span id="kValue">1</span>
+    <canvas id="plotCanvas"></canvas>
+    
+    <script>
+        let chart;
+        
+        function plotFunction(k = 1) {
+            const ctx = document.getElementById('plotCanvas').getContext('2d');
+            let xValues = [];
+            let yValues = [];
+            
+            for (let x = -Math.sqrt(3); x <= Math.sqrt(3); x += 0.01) {
+                let y = Math.pow(Math.abs(x), 2/3) + 0.9 * Math.sin(k * x) * Math.sqrt(3 - x * x);
+                xValues.push(x);
+                yValues.push(y);
+            }
+            
+            if (chart) chart.destroy();
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        label: `y = |x|^(2/3) + 0.9*sin(kx)*sqrt(3-x^2), k=${k}`,
+                        data: yValues,
+                        borderColor: 'red',
+                        fill: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'x' } },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+        
+        function updatePlot() {
+            const k = parseFloat(document.getElementById('kSlider').value);
+            document.getElementById('kValue').textContent = k;
+            plotFunction(k);
+        }
+        
+        plotFunction(1);
+    </script>
+</body>
+</html>
